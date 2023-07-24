@@ -63,13 +63,25 @@ class week1:
             dna = lines[0].rstrip()
         return self.ReverseComplement(dna)
     
-    def PatternMatching(self,text:str,pattern:str):
-        return
+    def PatternMatching(self,pattern:str,text:str) -> str:
+        matches = [] 
+
+        for i in range(len(text) - len(pattern) + 1):
+            if text[i:i + len(pattern)] == pattern:
+                matches.append(str(i))
+            
+        self.ans = ' '.join(matches)
+        return self.ans
+    
+    def PromptPatternMatching(self,file_directory:str) -> str:
+        with open(file_directory, 'r') as f:
+            lines = f.readlines()
+            pattern = lines[0].rstrip()
+            text = lines[1].rstrip()
+        
+        return self.PatternMatching(pattern,text)
 
 
-
-
-#prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-#print(week1().PromptReverseComplement(prompt_file))
-
-print('1')
+prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
+vibrio_cholera_genome_file = ''
+print(week1().PromptPatternMatching(prompt_file))
