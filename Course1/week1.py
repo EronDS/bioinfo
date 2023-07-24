@@ -1,9 +1,26 @@
+# constant file used to prompt different functions throughout week1 class
+prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
+
+# Exercise break 
+vibrio_cholerae_genome = ''
+vibrio_cholerae_pattern = 'CTTGATCAT'
+
+with open('/workspace/bioinfo/Course1/vibrio_cholerae_genome', 'r') as genome:
+    vibrio_cholerae_genome += genome.readline().rstrip()
+
+# Start 
+
 
 class week1:
     def __init__(self):
         self.ans = ''
     
     def PatternCount(self,text:str,pattern:str) -> int:
+        '''
+        Given a pattern (k-mer, per example) count
+        the number of occurences of this particular pattern in 
+        text (genome portion)
+        '''
         count = 0
         for i in range(len(text) - len(pattern) + 1):
             if text[i:i+len(pattern)] == pattern: 
@@ -13,6 +30,12 @@ class week1:
         return self.ans
     
     def PromptPatternCount(self, file_directory:str) -> int:
+
+        '''
+
+        Accessory function to PatternCount (reading file prompt)
+
+        '''
         with open(file_directory,'r') as f:
             lines = f.readlines()
             text = lines[0].rstrip()
@@ -20,6 +43,10 @@ class week1:
         return self.PatternCount(text,pattern)
 
     def BetterFrequentWords(self,text:str,k:int) -> str:
+        '''
+        Given text (genome portion, per example) and size
+        of k-mer, find most frequents in text,
+        '''
         kmers = {} 
         most_frequent_kmer = []
 
@@ -38,6 +65,10 @@ class week1:
         return self.ans
     
     def PromptBetterFrequentWords(self,file_directory:str) -> str:
+        '''
+        Accesory function to BetterFrequentWords,
+        read text and k in prompt file
+        '''
         with open(file_directory, 'r') as f:
             lines = f.readlines()
             text = lines[0].rstrip()
@@ -45,6 +76,9 @@ class week1:
         return self.BetterFrequentWords(text,k)
     
     def ReverseComplement(self,dna:str) -> str:
+        '''
+        given DNA, get its reverse complementary in result
+        '''
         complementarity = {'A':'T',
         'T': 'A', 
         'C' : 'G', 
@@ -58,12 +92,24 @@ class week1:
         return self.ans
     
     def PromptReverseComplement(self,file_directory:str) -> str:
+
+        ''' 
+        Accesory function to ReverseComplement,
+        read inputs in prompt file (dna string)
+        
+        '''
         with open(file_directory, 'r') as f:
             lines = f.readlines()
             dna = lines[0].rstrip()
         return self.ReverseComplement(dna)
     
     def PatternMatching(self,pattern:str,text:str) -> str:
+        '''
+        Given pattern (specific portion of genome, per example) and text (genome),
+        find all repetitions of specific pattern in text
+        '''
+
+
         matches = [] 
 
         for i in range(len(text) - len(pattern) + 1):
@@ -74,14 +120,20 @@ class week1:
         return self.ans
     
     def PromptPatternMatching(self,file_directory:str) -> str:
+        ''' 
+        Accessory function to PatternMatching.
+        Read pattern and text in prompt file 
+         '''
         with open(file_directory, 'r') as f:
             lines = f.readlines()
             pattern = lines[0].rstrip()
             text = lines[1].rstrip()
         
         return self.PatternMatching(pattern,text)
+    
 
 
-prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-vibrio_cholera_genome_file = ''
-print(week1().PromptPatternMatching(prompt_file))
+
+
+print(week1().PatternMatching(vibrio_cholerae_pattern,vibrio_cholerae_genome))
+
