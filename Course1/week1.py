@@ -1,14 +1,4 @@
-# constant file used to prompt different functions throughout week1 class
-prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-
-# Exercise break 
-vibrio_cholerae_genome = ''
-vibrio_cholerae_pattern = 'CTTGATCAT'
-
-with open('/workspace/bioinfo/Course1/vibrio_cholerae_genome', 'r') as genome:
-    vibrio_cholerae_genome += genome.readline().rstrip()
-
-# Start 
+# change: self.ans only in prompt functions :) 
 
 
 class week1:
@@ -63,7 +53,16 @@ class week1:
         
         self.ans = ' '.join(most_frequent_kmer)
         return self.ans
-    
+
+    def FrequencyTable(self,text:str,k:int):
+        freqMap = {} 
+        for i in range(len(text) - k + 1):
+            pattern = text[i:i+k]
+            freqMap[pattern] = self.PatternCount(text,pattern)
+
+        return freqMap
+
+
     def PromptBetterFrequentWords(self,file_directory:str) -> str:
         '''
         Accesory function to BetterFrequentWords,
@@ -130,10 +129,37 @@ class week1:
             text = lines[1].rstrip()
         
         return self.PatternMatching(pattern,text)
+
+    def FindClumps(self,text:str,k:int,l:int,t:int) -> str:
+        clumps = [] 
+        for i in range(len(text) - l + 1):
+            sliding_window = text[i:i+l]
+            freqMap = self.FrequencyTable(sliding_window,k=k)
+
+            for kmer in freqMap.keys():
+                if freqMap[kmer] >= t and kmer not in clumps:
+                    clumps.append(kmer)
+                
+        return clumps
+
+    
+    def PromptFindClumps(self,file_directory:str) -> str:
+        with open(file_directory, 'r') as f:
+            lines = f.readlines()
+            text = lines[0].rstrip()
+            k = int(lines[1].rstrip())
+            l = int(lines[2].rstrip())
+            t = int(lines[3].rstrip())
+        
+        ans = self.FindClumps(text,k,l,t)
+        self.ans = ' '.join(ans)
+        return self.ans
+
     
 
+# constant file used to prompt different functions throughout week1 class
+prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
 
 
 
-print(week1().PatternMatching(vibrio_cholerae_pattern,vibrio_cholerae_genome))
-
+print(week1().PromptFindClumps(prompt_file))
