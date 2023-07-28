@@ -142,7 +142,6 @@ class week1:
                 
         return clumps
 
-    
     def PromptFindClumps(self,file_directory:str) -> str:
         with open(file_directory, 'r') as f:
             lines = f.readlines()
@@ -159,7 +158,4 @@ class week1:
 
 # constant file used to prompt different functions throughout week1 class
 prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-
-
-
 print(week1().PromptFindClumps(prompt_file))
