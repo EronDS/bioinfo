@@ -97,6 +97,7 @@ class week2:
         self.ans = str(ans)
         return self.ans
 
+    
 
 
 prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
