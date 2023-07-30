@@ -1,6 +1,3 @@
-
-
-
 class week2:
     def __init__(self):
         self.ans = ''
@@ -135,8 +132,51 @@ class week2:
             ans = self.FrequentWordsMismatchs(text,k,d)
         self.ans = ' '.join(ans)
         return self.ans
+    
+    def ReverseComplement(self,dna:str) -> str:
+        '''
+        given DNA, get its reverse complementary in result
+        '''
+        complementarity = {'A':'T',
+        'T': 'A', 
+        'C' : 'G', 
+        'G' : 'C'}
 
+        complementary_dna = ''
+        for b in dna:
+            complementary_dna += complementarity[b]
+        
+    
+        return complementary_dna[::-1]
+
+    def FrequentWordsMismatchswReverseComplements(self,seq:str,k:int,d:int) -> list:
+        patterns = [] 
+        freqMap = {} 
+
+        for i in range(len(seq) - k + 1):
+            pattern = seq[i:i+k]
+            pattern_rc = self.ReverseComplement(pattern)
+            neighboorhood = self.Neighbors(pattern, d)
+            for neighbor in neighboorhood:
+                neighbor_rc = self.ReverseComplement(neighbor)
+                if neighbor not in freqMap.keys():
+                    freqMap[neighbor] = self.Count_d(neighbor, seq,d) + self.Count_d(neighbor_rc,seq,d)
+        
+        max_value = max(freqMap.values())
+        for k in freqMap.keys():
+            if freqMap[k] == max_value:
+                patterns.append(k)
+        return patterns
+    
+    def PromptFrequentWordsMismatchswReverseComplements(self,file_directory:str) -> str:
+        with open(file_directory, 'r') as f:
+            lines =f.readlines()
+            seq = lines[0].rstrip()
+            k,d = [int(i) for i in lines[1].rstrip().split()]
+
+        ans = self.FrequentWordsMismatchswReverseComplements(seq,k,d)
+        self.ans = ' '.join(ans)
+        return self.ans
  
 prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-print(week2().PromptFrequentWordsMismatchsReverseComplements(prompt_file))
-
+print(week2().PromptFrequentWordsMismatchswReverseComplements(prompt_file))
