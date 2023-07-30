@@ -73,7 +73,21 @@ class week1:
             text = lines[0].rstrip()
             k = int(lines[1].rstrip())
         return self.BetterFrequentWords(text,k)
-    
+    def ReverseComplement(self,dna:str) -> str:
+        '''
+        given DNA, get its reverse complementary in result
+        '''
+        complementarity = {'A':'T',
+        'T': 'A', 
+        'C' : 'G', 
+        'G' : 'C'}
+
+        complementary_dna = ''
+        for b in dna:
+            complementary_dna += complementarity[b]
+        
+        self.ans = complementary_dna[::-1]
+        return self.ans
     def ReverseComplement(self,dna:str) -> str:
         '''
         given DNA, get its reverse complementary in result
@@ -153,9 +167,3 @@ class week1:
         ans = self.FindClumps(text,k,l,t)
         self.ans = ' '.join(ans)
         return self.ans
-
-    
-
-# constant file used to prompt different functions throughout week1 class
-prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-print(week1().PromptFindClumps(prompt_file))

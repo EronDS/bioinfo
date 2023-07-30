@@ -1,4 +1,5 @@
-import matplotlib.pyplot as plt
+
+
 
 class week2:
     def __init__(self):
@@ -97,9 +98,45 @@ class week2:
         self.ans = str(ans)
         return self.ans
 
+    def Neighbors(self,pattern:str,d:int) -> list:
+        neighbors = [pattern] 
+        
+        for i in range(len(pattern)):
+            symbol = pattern[i]
+            for x in "ATCG":
+                if x != symbol:
+                    neighbors.append(pattern[:i] + x + pattern[i+1:])
+        return neighbors
+
+    def FrequentWordsMismatchs(self,seq:str,k:int,d:int) -> list:
+        patterns = [] 
+        freqMap = {} 
+
+        for i in range(len(seq) - k + 1):
+            pattern = seq[i:i+k]
+            neighboorhood = self.Neighbors(pattern, d)
+            for neighbor in neighboorhood:
+                if neighbor not in freqMap.keys():
+                    freqMap[neighbor] = 1
+                else: 
+                    freqMap[neighbor] += 1
+        
+        max_value = max(freqMap.values())
+        for k in freqMap.keys():
+            if freqMap[k] == max_value:
+                patterns.append(k)
+        return patterns
     
+    def PromptFrequentWordsMismatchs(self,file_directory:str) -> str:
+        with open(file_directory, 'r') as f:
+            lines = f.readlines()
+            text = lines[0].rstrip()
+            k, d = [int(i) for i in lines[1].rstrip().split()]
+            ans = self.FrequentWordsMismatchs(text,k,d)
+        self.ans = ' '.join(ans)
+        return self.ans
 
-
+ 
 prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-print(week2().PromptCount_d(prompt_file))
+print(week2().PromptFrequentWordsMismatchsReverseComplements(prompt_file))
 
