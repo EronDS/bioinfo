@@ -74,16 +74,17 @@ class week3:
             prob *= matrix[nucleotide][i]
         return prob
     
-    def ProfileMostProbableKmer(self,dna:str, k:int, matrix:list) -> str:
+    def ProfileMostProbableKmer(self,dna:str, k:int, matrix:dict) -> str:
         kmers = self.GenerateKmers([dna], k)
-        prob = 0 
+        prob = 0.0
         most_probable = ''
 
         for mer in kmers:
-            mer_prob = self.Profile(mer,matrix)
+            mer_prob = self.Profile(mer, matrix)
             if mer_prob > prob:
                 prob = mer_prob
                 most_probable = mer
+
         print(f'Most Probable K-mer: {most_probable}\n\
          Probability: {prob}')
         return most_probable
@@ -96,18 +97,65 @@ class week3:
             k = int(lines[1].rstrip())
             map_ = {
         'A': list(map(float, lines[2].rstrip().split())),
-        'T': list(map(float, lines[3].rstrip().split())),
-        'C': list(map(float, lines[4].rstrip().split())),
-        'G': list(map(float, lines[5].rstrip().split()))}
+        'C': list(map(float, lines[3].rstrip().split())),
+        'G': list(map(float, lines[4].rstrip().split())),
+        'T': list(map(float, lines[5].rstrip().split()))}
         self.map_ = map_
-
         
         ans = self.ProfileMostProbableKmer(dna,k=k,matrix=map_)
         self.ans = ans
         return self.ans
 
-        
+    def GenerateProfileMatrix(self, kmers: list):
+        # initiate counting dictionary
+        k = len(kmers[0])
+        map_ = {'A': [0 for _ in range(k)],
+                'C': [0 for _ in range(k)],
+                'G': [0 for _ in range(k)],
+                'T': [0 for _ in range(k)]}
+
+        # count kmer in dictionary (for each position)
+        for kmer in kmers:
+            for i in range(len(kmer)):
+                nucleotide = kmer[i]
+                map_[nucleotide][i] += 1
+
+        # create a separate map_freq dictionary to store frequencies
+        map_freq = {'A': [0 for _ in range(k)],
+                    'C': [0 for _ in range(k)],
+                    'G': [0 for _ in range(k)],
+                    'T': [0 for _ in range(k)]}
+
+        # transform count into frequencies
+        for nucleotide in map_.keys():
+            for i in range(len(map_[nucleotide])):
+                total = map_['A'][i] + map_['T'][i] + map_['C'][i] + map_['G'][i]
+                map_freq[nucleotide][i] = map_[nucleotide][i] / total
+
+        return map_freq
+
+    
+    def GreedyMotifSearch(self,k:int,t:int,dna:list) -> list:
+        best_motifs = [] 
+        motifs = []
+
+        for string in dna:
+            kmers = self.GenerateKmers([string],k)
+            motif_score = self.GenerateProfileMatrix(kmers)
+            motif_i = self.ProfileMostProbableKmer(string,k,motif_score)
+            motifs.append(motif_i)
+
+        return motifs
+    
+    def PromptGreedyMotifSearch(self,file_directory:str) -> str:
+        with open(file_directory,'r') as f:
+            lines = f.readlines()
+            k,t = [int(i) for i in lines[0].rstrip().split()]
+            dna = lines[1].rstrip().split()
+    
+        ans = self.GreedyMotifSearch(k,t,dna)
+        self.ans = ' '.join(ans)
+        return self.ans
 
 prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
-print(week3().PromptProfileMostProbableKmer(prompt_file))
-print(week3().Profile('CCGAG', {'A': [0.2, 0.2, 0.3, 0.2, 0.3], 'T': [0.4, 0.3, 0.1, 0.5, 0.1], 'C': [0.3, 0.3, 0.5, 0.2, 0.4], 'G': [0.1, 0.2, 0.1, 0.1, 0.2]}))
+print(week3().PromptGreedyMotifSearch(prompt_file))
