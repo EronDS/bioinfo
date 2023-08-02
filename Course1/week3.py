@@ -184,10 +184,6 @@ class week3:
 
         return best_motifs
 
-
-
-
-    
     def PromptGreedyMotifSearch(self,file_directory:str) -> str:
         with open(file_directory,'r') as f:
             lines = f.readlines()
@@ -200,6 +196,6 @@ class week3:
             w.write(self.ans)
         return self.ans
 
-prompt_file = '/workspace/bioinfo/GreedyMotifSearch/inputs/input_1.txt'
+prompt_file = '/workspace/bioinfo/Course1/prompt.txt'
 print(week3().PromptGreedyMotifSearch(prompt_file))
 
